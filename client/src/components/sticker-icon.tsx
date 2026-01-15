@@ -1,38 +1,49 @@
 import { motion } from "framer-motion";
 import type { Sticker } from "@shared/schema";
-import { 
-  Crown, Heart, Star, Flower2, Rainbow, Sun, Moon,
-  Cat, Dog, Rabbit, Bird, Trophy, Medal, Shield, Gem,
-  Sparkles, Wand2, Bug
-} from "lucide-react";
+import { Sparkles, Lock } from "lucide-react";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Princess: Crown,
-  Fairy: Wand2,
-  Heart: Heart,
-  Crown: Crown,
-  Butterfly: Bug,
-  Bunny: Rabbit,
-  Kitty: Cat,
-  Puppy: Dog,
-  Bear: Bird,
-  Unicorn: Sparkles,
-  Flower: Flower2,
-  Rainbow: Rainbow,
-  Star: Star,
-  Sun: Sun,
-  Moon: Moon,
-  Medal: Medal,
-  Trophy: Trophy,
-  Shield: Shield,
-  Gem: Gem,
-};
+import magicalGirlWithWand from "@assets/generated_images/magical_girl_with_wand.png";
+import princessMagicalGirl from "@assets/generated_images/princess_magical_girl.png";
+import fortuneTellerGirl from "@assets/generated_images/fortune_teller_girl.png";
+import fairyMagicalGirl from "@assets/generated_images/fairy_magical_girl.png";
+import unicornRiderGirl from "@assets/generated_images/unicorn_rider_girl.png";
+import girlWithBunny from "@assets/generated_images/girl_with_bunny.png";
+import girlWithKitten from "@assets/generated_images/girl_with_kitten.png";
+import girlWithPuppy from "@assets/generated_images/girl_with_puppy.png";
+import girlWithBird from "@assets/generated_images/girl_with_bird.png";
+import girlWithHamster from "@assets/generated_images/girl_with_hamster.png";
+import cherryBlossomGirl from "@assets/generated_images/cherry_blossom_girl.png";
+import rainyDayGirl from "@assets/generated_images/rainy_day_girl.png";
+import sunflowerGirl from "@assets/generated_images/sunflower_girl.png";
+import autumnLeavesGirl from "@assets/generated_images/autumn_leaves_girl.png";
+import winterSnowGirl from "@assets/generated_images/winter_snow_girl.png";
+import trophyWinnerGirl from "@assets/generated_images/trophy_winner_girl.png";
+import medalWinnerGirl from "@assets/generated_images/medal_winner_girl.png";
+import graduateGirl from "@assets/generated_images/graduate_girl.png";
+import superStarGirl from "@assets/generated_images/super_star_girl.png";
+import rainbowHeartGirl from "@assets/generated_images/rainbow_heart_girl.png";
 
-const categoryColors: Record<string, { bg: string; fg: string }> = {
-  "magical-girls": { bg: "bg-pink-100 dark:bg-pink-900/30", fg: "text-pink-500" },
-  "cute-animals": { bg: "bg-amber-100 dark:bg-amber-900/30", fg: "text-amber-500" },
-  "nature": { bg: "bg-green-100 dark:bg-green-900/30", fg: "text-green-500" },
-  "achievements": { bg: "bg-purple-100 dark:bg-purple-900/30", fg: "text-purple-500" },
+const imageMap: Record<string, string> = {
+  magical_girl_with_wand: magicalGirlWithWand,
+  princess_magical_girl: princessMagicalGirl,
+  fortune_teller_girl: fortuneTellerGirl,
+  fairy_magical_girl: fairyMagicalGirl,
+  unicorn_rider_girl: unicornRiderGirl,
+  girl_with_bunny: girlWithBunny,
+  girl_with_kitten: girlWithKitten,
+  girl_with_puppy: girlWithPuppy,
+  girl_with_bird: girlWithBird,
+  girl_with_hamster: girlWithHamster,
+  cherry_blossom_girl: cherryBlossomGirl,
+  rainy_day_girl: rainyDayGirl,
+  sunflower_girl: sunflowerGirl,
+  autumn_leaves_girl: autumnLeavesGirl,
+  winter_snow_girl: winterSnowGirl,
+  trophy_winner_girl: trophyWinnerGirl,
+  medal_winner_girl: medalWinnerGirl,
+  graduate_girl: graduateGirl,
+  super_star_girl: superStarGirl,
+  rainbow_heart_girl: rainbowHeartGirl,
 };
 
 interface StickerIconProps {
@@ -50,19 +61,18 @@ export function StickerIcon({
   showLabel = false,
   onClick 
 }: StickerIconProps) {
-  const Icon = iconMap[sticker.emoji] || Star;
-  const colors = categoryColors[sticker.category] || categoryColors["magical-girls"];
+  const imageSrc = imageMap[sticker.imageSrc];
   
   const sizeClasses = {
-    sm: "w-8 h-8",
-    md: "w-14 h-14",
-    lg: "w-20 h-20",
+    sm: "w-10 h-10",
+    md: "w-16 h-16",
+    lg: "w-24 h-24",
   };
 
-  const iconSizes = {
+  const lockSizes = {
     sm: "w-4 h-4",
-    md: "w-7 h-7",
-    lg: "w-10 h-10",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
   };
 
   return (
@@ -73,26 +83,32 @@ export function StickerIcon({
       whileTap={onClick ? { scale: 0.95 } : undefined}
     >
       <div
-        className={`${sizeClasses[size]} rounded-2xl flex items-center justify-center transition-all duration-300 ${
+        className={`${sizeClasses[size]} rounded-2xl flex items-center justify-center transition-all duration-300 overflow-hidden relative ${
           unlocked
-            ? `${colors.bg} shadow-lg shadow-primary/10`
+            ? "shadow-lg shadow-primary/20"
             : "bg-muted/50"
         }`}
       >
-        <Icon
-          className={`${iconSizes[size]} transition-all duration-300 ${
-            unlocked ? colors.fg : "text-muted-foreground/30"
-          }`}
-        />
-        {unlocked && (
-          <motion.div
-            className="absolute"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 1.5, 0], opacity: [0, 1, 0] }}
-            transition={{ duration: 1, repeat: Infinity, repeatDelay: 3 }}
-          >
-            <Sparkles className={`${iconSizes[size]} text-yellow-400`} />
-          </motion.div>
+        {unlocked ? (
+          <>
+            <img
+              src={imageSrc}
+              alt={sticker.name}
+              className="w-full h-full object-cover"
+            />
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >
+              <Sparkles className="absolute top-0 right-0 w-4 h-4 text-yellow-400" />
+            </motion.div>
+          </>
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-muted/30">
+            <Lock className={`${lockSizes[size]} text-muted-foreground/40`} />
+          </div>
         )}
       </div>
       {showLabel && (

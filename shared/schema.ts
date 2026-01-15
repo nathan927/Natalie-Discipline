@@ -54,7 +54,7 @@ export type TimerSession = typeof timerSessions.$inferSelect;
 export interface Sticker {
   id: string;
   name: string;
-  emoji: string;
+  imageSrc: string;
   category: StickerCategory;
   requiredPoints: number;
 }
@@ -68,26 +68,26 @@ export interface UserProgress {
 }
 
 export const stickers: Sticker[] = [
-  { id: "mg-1", name: "公主星星", emoji: "Princess", category: "magical-girls", requiredPoints: 10 },
-  { id: "mg-2", name: "仙女魔杖", emoji: "Fairy", category: "magical-girls", requiredPoints: 25 },
-  { id: "mg-3", name: "彩虹愛心", emoji: "Heart", category: "magical-girls", requiredPoints: 50 },
-  { id: "mg-4", name: "閃亮皇冠", emoji: "Crown", category: "magical-girls", requiredPoints: 75 },
-  { id: "mg-5", name: "魔法蝴蝶", emoji: "Butterfly", category: "magical-girls", requiredPoints: 100 },
-  { id: "ca-1", name: "兔兔愛心", emoji: "Bunny", category: "cute-animals", requiredPoints: 10 },
-  { id: "ca-2", name: "貓貓抱抱", emoji: "Kitty", category: "cute-animals", requiredPoints: 25 },
-  { id: "ca-3", name: "狗狗腳印", emoji: "Puppy", category: "cute-animals", requiredPoints: 50 },
-  { id: "ca-4", name: "熊熊擁抱", emoji: "Bear", category: "cute-animals", requiredPoints: 75 },
-  { id: "ca-5", name: "獨角獸魔法", emoji: "Unicorn", category: "cute-animals", requiredPoints: 100 },
-  { id: "n-1", name: "花花力量", emoji: "Flower", category: "nature", requiredPoints: 10 },
-  { id: "n-2", name: "彩虹閃耀", emoji: "Rainbow", category: "nature", requiredPoints: 25 },
-  { id: "n-3", name: "星光閃閃", emoji: "Star", category: "nature", requiredPoints: 50 },
-  { id: "n-4", name: "陽光燦爛", emoji: "Sun", category: "nature", requiredPoints: 75 },
-  { id: "n-5", name: "月光寶貝", emoji: "Moon", category: "nature", requiredPoints: 100 },
-  { id: "a-1", name: "超級之星", emoji: "Medal", category: "achievements", requiredPoints: 15 },
-  { id: "a-2", name: "冠軍獎盃", emoji: "Trophy", category: "achievements", requiredPoints: 30 },
-  { id: "a-3", name: "英雄徽章", emoji: "Shield", category: "achievements", requiredPoints: 60 },
-  { id: "a-4", name: "閃亮鑽石", emoji: "Gem", category: "achievements", requiredPoints: 90 },
-  { id: "a-5", name: "傳奇之星", emoji: "Crown", category: "achievements", requiredPoints: 120 },
+  { id: "mg-1", name: "魔法公主", imageSrc: "magical_girl_with_wand", category: "magical-girls", requiredPoints: 10 },
+  { id: "mg-2", name: "皇冠公主", imageSrc: "princess_magical_girl", category: "magical-girls", requiredPoints: 25 },
+  { id: "mg-3", name: "水晶少女", imageSrc: "fortune_teller_girl", category: "magical-girls", requiredPoints: 50 },
+  { id: "mg-4", name: "花仙子", imageSrc: "fairy_magical_girl", category: "magical-girls", requiredPoints: 75 },
+  { id: "mg-5", name: "獨角獸騎士", imageSrc: "unicorn_rider_girl", category: "magical-girls", requiredPoints: 100 },
+  { id: "ca-1", name: "兔兔女孩", imageSrc: "girl_with_bunny", category: "cute-animals", requiredPoints: 10 },
+  { id: "ca-2", name: "貓咪女孩", imageSrc: "girl_with_kitten", category: "cute-animals", requiredPoints: 25 },
+  { id: "ca-3", name: "狗狗女孩", imageSrc: "girl_with_puppy", category: "cute-animals", requiredPoints: 50 },
+  { id: "ca-4", name: "小鳥女孩", imageSrc: "girl_with_bird", category: "cute-animals", requiredPoints: 75 },
+  { id: "ca-5", name: "倉鼠女孩", imageSrc: "girl_with_hamster", category: "cute-animals", requiredPoints: 100 },
+  { id: "n-1", name: "櫻花少女", imageSrc: "cherry_blossom_girl", category: "nature", requiredPoints: 10 },
+  { id: "n-2", name: "雨天女孩", imageSrc: "rainy_day_girl", category: "nature", requiredPoints: 25 },
+  { id: "n-3", name: "向日葵女孩", imageSrc: "sunflower_girl", category: "nature", requiredPoints: 50 },
+  { id: "n-4", name: "楓葉少女", imageSrc: "autumn_leaves_girl", category: "nature", requiredPoints: 75 },
+  { id: "n-5", name: "雪花公主", imageSrc: "winter_snow_girl", category: "nature", requiredPoints: 100 },
+  { id: "a-1", name: "冠軍女孩", imageSrc: "trophy_winner_girl", category: "achievements", requiredPoints: 15 },
+  { id: "a-2", name: "獎牌少女", imageSrc: "medal_winner_girl", category: "achievements", requiredPoints: 30 },
+  { id: "a-3", name: "畢業女孩", imageSrc: "graduate_girl", category: "achievements", requiredPoints: 60 },
+  { id: "a-4", name: "超級明星", imageSrc: "super_star_girl", category: "achievements", requiredPoints: 90 },
+  { id: "a-5", name: "彩虹愛心", imageSrc: "rainbow_heart_girl", category: "achievements", requiredPoints: 120 },
 ];
 
 export const users = pgTable("users", {
