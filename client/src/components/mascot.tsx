@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import mascotHappy from "@assets/generated_images/black_hair_anime_girl_mascot.png";
+import mascotWaving from "@assets/generated_images/black_hair_girl_waving_hello.png";
 
 interface MascotProps {
   mood?: "happy" | "cheering" | "thinking" | "sleeping";
@@ -14,14 +16,12 @@ export function Mascot({ mood = "happy", size = "md", message, testId }: MascotP
     lg: "w-32 h-32",
   };
 
-  const faceExpressions = {
-    happy: { eyes: "^", mouth: "◡" },
-    cheering: { eyes: "★", mouth: "◡" },
-    thinking: { eyes: "•", mouth: "~" },
-    sleeping: { eyes: "—", mouth: "◡" },
+  const getMascotImage = () => {
+    if (mood === "cheering" || mood === "happy") {
+      return mascotWaving;
+    }
+    return mascotHappy;
   };
-
-  const expression = faceExpressions[mood];
 
   return (
     <div className="flex flex-col items-center gap-2" data-testid={testId || "mascot"}>
@@ -29,7 +29,7 @@ export function Mascot({ mood = "happy", size = "md", message, testId }: MascotP
         className={`${sizeClasses[size]} relative`}
         animate={
           mood === "cheering"
-            ? { y: [0, -10, 0], rotate: [-5, 5, -5] }
+            ? { y: [0, -10, 0], rotate: [-3, 3, -3] }
             : mood === "sleeping"
             ? { y: [0, 2, 0] }
             : { y: [0, -5, 0] }
@@ -40,41 +40,11 @@ export function Mascot({ mood = "happy", size = "md", message, testId }: MascotP
           ease: "easeInOut",
         }}
       >
-        <div className="w-full h-full rounded-full bg-gradient-to-br from-pink-300 to-pink-400 dark:from-pink-500 dark:to-pink-600 shadow-lg flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/30 rounded-full" />
-          
-          <div className="flex gap-2 mb-1 relative z-10">
-            <motion.span 
-              className="text-lg font-bold text-pink-700 dark:text-pink-200"
-              animate={mood === "sleeping" ? { opacity: [1, 0.5, 1] } : {}}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {expression.eyes}
-            </motion.span>
-            <motion.span 
-              className="text-lg font-bold text-pink-700 dark:text-pink-200"
-              animate={mood === "sleeping" ? { opacity: [1, 0.5, 1] } : {}}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {expression.eyes}
-            </motion.span>
-          </div>
-          
-          <span className="text-xl text-pink-600 dark:text-pink-200 relative z-10">
-            {expression.mouth}
-          </span>
-
-          <motion.div
-            className="absolute -top-2 left-1/2 transform -translate-x-1/2"
-            animate={{ rotate: mood === "cheering" ? [0, -10, 10, 0] : 0 }}
-            transition={{ duration: 0.5, repeat: mood === "cheering" ? Infinity : 0 }}
-          >
-            <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[12px] border-b-yellow-400" />
-          </motion.div>
-
-          <div className="absolute -left-1 top-1/3 w-3 h-4 rounded-full bg-pink-400 dark:bg-pink-500" />
-          <div className="absolute -right-1 top-1/3 w-3 h-4 rounded-full bg-pink-400 dark:bg-pink-500" />
-        </div>
+        <img 
+          src={getMascotImage()} 
+          alt="Natalie" 
+          className="w-full h-full object-contain rounded-full"
+        />
 
         {mood === "cheering" && (
           <>
