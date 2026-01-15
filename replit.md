@@ -1,4 +1,4 @@
-# Natalie - Self-Discipline App
+# Natalie - 自律小幫手
 
 ## Overview
 
@@ -6,7 +6,16 @@ Natalie is a self-discipline and habit-building app designed for children, featu
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+- Preferred communication style: Simple, everyday language
+- **Language**: Traditional Chinese (Hong Kong) - zh-Hant-HK
+- **Target Platform**: Android (PWA installable app)
+
+## Recent Changes (January 2026)
+
+- Full Traditional Chinese (HK) localization across all UI text, navigation, pages, validation messages, and sample data
+- PWA (Progressive Web App) implementation for Android installation
+- Service worker with offline caching support
+- Custom app icons for Android home screen
 
 ## System Architecture
 
@@ -19,7 +28,13 @@ Preferred communication style: Simple, everyday language.
 - **Animations**: Framer Motion for smooth, playful interactions
 - **Build Tool**: Vite with custom plugins for Replit integration
 
-The frontend follows a mobile-first design with bottom navigation (5 tabs: Home, Schedule, Timer, Stickers, Profile). The visual design uses soft, rounded corners and a pink feminine theme with light/dark mode support via CSS variables.
+The frontend follows a mobile-first design with bottom navigation (5 tabs: 主頁, 日程, 計時, 貼紙, 檔案). The visual design uses soft, rounded corners and a pink feminine theme with light/dark mode support via CSS variables.
+
+### PWA Configuration
+- **Manifest**: `/manifest.json` with app metadata in Traditional Chinese
+- **Service Worker**: `/sw.js` with cache-first strategy for static assets
+- **Icons**: `/icons/icon-192.png` and `/icons/icon-512.png` for Android installation
+- **Offline Support**: Caches essential assets and provides offline fallback
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
