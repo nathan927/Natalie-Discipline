@@ -11,9 +11,9 @@ interface MascotProps {
 
 export function Mascot({ mood = "happy", size = "md", message, testId }: MascotProps) {
   const sizeClasses = {
-    sm: "w-16 h-16",
-    md: "w-24 h-24",
-    lg: "w-32 h-32",
+    sm: "w-20 h-20",
+    md: "w-28 h-28",
+    lg: "w-40 h-40",
   };
 
   const getMascotImage = () => {

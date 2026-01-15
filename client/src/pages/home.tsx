@@ -102,7 +102,7 @@ export default function Home() {
             </h1>
             <p className="text-muted-foreground mt-1">今日加油！</p>
           </div>
-          <Mascot mood={getMascotMood()} size="sm" />
+          <Mascot mood={getMascotMood()} size="md" />
         </motion.div>
 
         <motion.div

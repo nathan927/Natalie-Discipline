@@ -112,7 +112,7 @@ export default function Profile() {
                   </span>
                 </div>
               </div>
-              <Mascot mood="happy" size="sm" />
+              <Mascot mood="happy" size="md" />
             </div>
           </Card>
         </motion.div>
