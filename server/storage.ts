@@ -44,10 +44,10 @@ export class MemStorage implements IStorage {
 
   private seedInitialTasks() {
     const sampleTasks: InsertTask[] = [
-      { title: "Practice piano for 30 minutes", scheduledTime: "09:00", durationMinutes: 30, stickerId: "mg-1" },
-      { title: "Read a book chapter", scheduledTime: "10:00", durationMinutes: 20, stickerId: "ca-1" },
-      { title: "Do homework", scheduledTime: "15:00", durationMinutes: 45, stickerId: "n-1" },
-      { title: "Help with chores", scheduledTime: "17:00", durationMinutes: 15, stickerId: "mg-2" },
+      { title: "練習鋼琴30分鐘", scheduledTime: "09:00", durationMinutes: 30, stickerId: "mg-1" },
+      { title: "閱讀一個章節", scheduledTime: "10:00", durationMinutes: 20, stickerId: "ca-1" },
+      { title: "做功課", scheduledTime: "15:00", durationMinutes: 45, stickerId: "n-1" },
+      { title: "幫手做家務", scheduledTime: "17:00", durationMinutes: 15, stickerId: "mg-2" },
     ];
 
     sampleTasks.forEach(task => {

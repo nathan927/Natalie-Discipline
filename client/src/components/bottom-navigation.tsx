@@ -3,11 +3,11 @@ import { Home, Calendar, Timer, Star, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
-  { path: "/", label: "Home", icon: Home },
-  { path: "/schedule", label: "Schedule", icon: Calendar },
-  { path: "/timer", label: "Timer", icon: Timer },
-  { path: "/stickers", label: "Stickers", icon: Star },
-  { path: "/profile", label: "Profile", icon: User },
+  { path: "/", label: "主頁", icon: Home },
+  { path: "/schedule", label: "日程", icon: Calendar },
+  { path: "/timer", label: "計時", icon: Timer },
+  { path: "/stickers", label: "貼紙", icon: Star },
+  { path: "/profile", label: "檔案", icon: User },
 ];
 
 export function BottomNavigation() {

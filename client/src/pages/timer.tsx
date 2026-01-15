@@ -10,10 +10,10 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { stickers } from "@shared/schema";
 
 const presetTimes = [
-  { label: "5 min", minutes: 5 },
-  { label: "15 min", minutes: 15 },
-  { label: "30 min", minutes: 30 },
-  { label: "60 min", minutes: 60 },
+  { label: "5分鐘", minutes: 5 },
+  { label: "15分鐘", minutes: 15 },
+  { label: "30分鐘", minutes: 30 },
+  { label: "60分鐘", minutes: 60 },
 ];
 
 export default function Timer() {
@@ -116,9 +116,9 @@ export default function Timer() {
   };
 
   const getMascotMessage = () => {
-    if (timeLeft === 0) return "Amazing! You did it!";
-    if (isRunning) return "Keep going! You're doing great!";
-    return "Ready to focus?";
+    if (timeLeft === 0) return "太叻啦！你做到喇！";
+    if (isRunning) return "繼續加油！你做得好好！";
+    return "準備好專注？";
   };
 
   return (
@@ -130,7 +130,7 @@ export default function Timer() {
           animate={{ opacity: 1, y: 0 }}
         >
           <TimerIcon className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">Focus Timer</h1>
+          <h1 className="text-2xl font-bold text-foreground">專注計時器</h1>
           <div className="flex-1" />
           <Button
             variant="ghost"
@@ -192,7 +192,7 @@ export default function Timer() {
                 {formatTime(timeLeft)}
               </motion.span>
               <span className="text-muted-foreground mt-2">
-                {isRunning ? "Focus time" : "Press play to start"}
+                {isRunning ? "專注中" : "按開始鍵"}
               </span>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function Timer() {
           transition={{ delay: 0.3 }}
         >
           <Card className="p-4">
-            <h3 className="font-medium text-foreground mb-3 text-center">Quick Timer</h3>
+            <h3 className="font-medium text-foreground mb-3 text-center">快速計時</h3>
             <div className="grid grid-cols-4 gap-2">
               {presetTimes.map((preset) => (
                 <Button
@@ -297,7 +297,7 @@ export default function Timer() {
         }}
         sticker={stickers[Math.floor(Math.random() * 5)]}
         points={selectedMinutes}
-        message="Focus session complete!"
+        message="專注時間完成！"
       />
     </div>
   );

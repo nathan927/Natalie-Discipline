@@ -55,7 +55,7 @@ export function CelebrationModal({
   isOpen,
   onClose,
   sticker,
-  message = "Great job!",
+  message = "做得好！",
   points,
 }: CelebrationModalProps) {
   return (
@@ -122,7 +122,7 @@ export function CelebrationModal({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  You earned the <span className="text-primary font-semibold">{sticker.name}</span> sticker!
+                  你獲得咗 <span className="text-primary font-semibold">{sticker.name}</span> 貼紙！
                 </motion.p>
               )}
 
@@ -133,7 +133,7 @@ export function CelebrationModal({
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5, type: "spring" }}
                 >
-                  <span className="text-primary font-bold text-lg">+{points} points!</span>
+                  <span className="text-primary font-bold text-lg">+{points} 積分！</span>
                 </motion.div>
               )}
 
@@ -143,7 +143,7 @@ export function CelebrationModal({
                 transition={{ delay: 0.6 }}
               >
                 <Button onClick={onClose} data-testid="celebration-continue">
-                  Continue
+                  繼續
                 </Button>
               </motion.div>
             </div>

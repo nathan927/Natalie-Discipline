@@ -1,0 +1,26 @@
+{
+  "name": "Natalie - 自律小幫手",
+  "short_name": "Natalie",
+  "description": "專為小朋友設計嘅自律應用程式，有可愛貼紙同計時器",
+  "lang": "zh-Hant-HK",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fdf2f8",
+  "theme_color": "#ec4899",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "kids", "productivity"]
+}

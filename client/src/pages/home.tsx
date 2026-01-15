@@ -42,7 +42,7 @@ export default function Home() {
         show: true,
         sticker,
         points: 10,
-        message: "Amazing work!",
+        message: "做得好！",
       });
 
       queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
@@ -77,9 +77,9 @@ export default function Home() {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 17) return "Good afternoon";
-    return "Good evening";
+    if (hour < 12) return "早晨";
+    if (hour < 17) return "午安";
+    return "晚安";
   };
 
   const getMascotMood = () => {
@@ -100,7 +100,7 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-foreground" data-testid="text-greeting">
               {getGreeting()}!
             </h1>
-            <p className="text-muted-foreground mt-1">Let's have a great day</p>
+            <p className="text-muted-foreground mt-1">今日加油！</p>
           </div>
           <Mascot mood={getMascotMood()} size="sm" />
         </motion.div>
@@ -112,7 +112,7 @@ export default function Home() {
         >
           <Card className="p-6 mb-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-foreground">Today's Progress</h2>
+              <h2 className="font-semibold text-foreground">今日進度</h2>
               <span className="text-2xl font-bold text-primary" data-testid="text-progress-percent">
                 {completionRate}%
               </span>
@@ -125,7 +125,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="font-medium text-foreground" data-testid="text-completed-count">{completedTasks.length}</p>
-                  <p className="text-xs text-muted-foreground">Done</p>
+                  <p className="text-xs text-muted-foreground">完成</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="font-medium text-foreground" data-testid="text-streak">{progress?.currentStreak || 0}</p>
-                  <p className="text-xs text-muted-foreground">Streak</p>
+                  <p className="text-xs text-muted-foreground">連續</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="font-medium text-foreground" data-testid="text-points">{progress?.totalPoints || 0}</p>
-                  <p className="text-xs text-muted-foreground">Points</p>
+                  <p className="text-xs text-muted-foreground">積分</p>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function Home() {
           transition={{ delay: 0.2 }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-lg text-foreground">Today's Tasks</h2>
+            <h2 className="font-semibold text-lg text-foreground">今日任務</h2>
             <Button
               variant="ghost"
               size="sm"
@@ -165,7 +165,7 @@ export default function Home() {
               data-testid="button-add-task"
             >
               <Plus className="w-4 h-4 mr-1" />
-              Add
+              新增
             </Button>
           </div>
 
@@ -181,14 +181,14 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <Mascot mood="thinking" size="lg" message="Ready to plan your day?" />
+              <Mascot mood="thinking" size="lg" message="準備好計劃你嘅一日？" />
               <Button
                 className="mt-6"
                 onClick={() => setShowAddTask(true)}
                 data-testid="button-add-first-task"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add your first task
+                新增第一個任務
               </Button>
             </motion.div>
           ) : (
@@ -208,7 +208,7 @@ export default function Home() {
               {completedTasks.length > 0 && (
                 <div className="pt-4">
                   <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                    Completed ({completedTasks.length})
+                    已完成 ({completedTasks.length})
                   </h3>
                   <AnimatePresence>
                     {completedTasks.map((task) => (

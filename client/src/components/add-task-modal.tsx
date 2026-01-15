@@ -32,7 +32,7 @@ interface AddTaskModalProps {
 const presetDurations = [15, 30, 45, 60];
 
 const formSchema = z.object({
-  title: z.string().min(1, "Task title is required"),
+  title: z.string().min(1, "請輸入任務標題"),
   scheduledTime: z.string().optional(),
   durationMinutes: z.number().min(1).optional(),
   recurring: z.enum(["daily", "weekly", "none"]).default("none"),
@@ -96,7 +96,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
             data-testid="add-task-modal"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-foreground" data-testid="modal-title">New Task</h2>
+              <h2 className="text-xl font-bold text-foreground" data-testid="modal-title">新任務</h2>
               <Button
                 variant="ghost"
                 size="icon"
@@ -115,12 +115,12 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium">
-                        What do you need to do?
+                        你需要做咩？
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="e.g., Practice piano"
+                          placeholder="例如：練習鋼琴"
                           className="h-12 text-lg rounded-xl"
                           autoFocus
                           data-testid="input-task-title"
@@ -138,7 +138,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                       <FormItem className="flex-1">
                         <FormLabel className="text-sm font-medium flex items-center gap-2">
                           <Clock className="w-4 h-4" />
-                          Time
+                          時間
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -159,7 +159,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                       <FormItem className="flex-1">
                         <FormLabel className="text-sm font-medium flex items-center gap-2">
                           <Repeat className="w-4 h-4" />
-                          Repeat
+                          重複
                         </FormLabel>
                         <Select value={field.value} onValueChange={field.onChange}>
                           <FormControl>
@@ -168,9 +168,9 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="none" data-testid="option-none">No repeat</SelectItem>
-                            <SelectItem value="daily" data-testid="option-daily">Daily</SelectItem>
-                            <SelectItem value="weekly" data-testid="option-weekly">Weekly</SelectItem>
+                            <SelectItem value="none" data-testid="option-none">唔重複</SelectItem>
+                            <SelectItem value="daily" data-testid="option-daily">每日</SelectItem>
+                            <SelectItem value="weekly" data-testid="option-weekly">每週</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormItem>
@@ -183,7 +183,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                   name="durationMinutes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium">Duration (minutes)</FormLabel>
+                      <FormLabel className="text-sm font-medium">時長（分鐘）</FormLabel>
                       <div className="flex gap-2">
                         {presetDurations.map((d) => (
                           <Button
@@ -209,7 +209,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                     <FormItem>
                       <FormLabel className="text-sm font-medium flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-primary" />
-                        Reward Sticker
+                        獎勵貼紙
                       </FormLabel>
                       <div className="flex gap-3 justify-center py-2">
                         {magicalStickers.map((sticker) => (
@@ -238,7 +238,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                   disabled={!form.formState.isValid}
                   data-testid="button-create-task"
                 >
-                  Create Task
+                  建立任務
                 </Button>
               </form>
             </Form>

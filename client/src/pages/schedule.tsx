@@ -109,7 +109,7 @@ export default function Schedule() {
         >
           <div className="flex items-center gap-3">
             <CalendarDays className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Schedule</h1>
+            <h1 className="text-2xl font-bold text-foreground">日程表</h1>
           </div>
         </motion.div>
 
@@ -195,7 +195,7 @@ export default function Schedule() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg text-foreground" data-testid="text-selected-date">
-              {isToday(selectedDate) ? "Today" : format(selectedDate, "EEEE, MMM d")}
+              {isToday(selectedDate) ? "今日" : format(selectedDate, "M月d日 EEEE")}
             </h2>
             <Button
               variant="ghost"
@@ -205,7 +205,7 @@ export default function Schedule() {
               data-testid="button-add-task-schedule"
             >
               <Plus className="w-4 h-4 mr-1" />
-              Add
+              新增
             </Button>
           </div>
 
@@ -221,14 +221,14 @@ export default function Schedule() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <Mascot mood="thinking" size="md" message="No tasks for this day" />
+              <Mascot mood="thinking" size="md" message="今日暫時冇任務" />
               <Button
                 className="mt-6"
                 onClick={() => setShowAddTask(true)}
                 data-testid="button-add-task-empty"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add a task
+                新增任務
               </Button>
             </motion.div>
           ) : (
@@ -269,7 +269,7 @@ export default function Schedule() {
         onClose={() => setCelebration({ show: false })}
         sticker={celebration.sticker}
         points={celebration.points}
-        message="Great job!"
+        message="做得好！"
       />
     </div>
   );

@@ -11,10 +11,10 @@ import { Mascot } from "@/components/mascot";
 import { stickers, stickerCategories, type StickerCategory, type UserProgress } from "@shared/schema";
 
 const categoryLabels: Record<StickerCategory, string> = {
-  "magical-girls": "Magical",
-  "cute-animals": "Animals",
-  "nature": "Nature",
-  "achievements": "Awards",
+  "magical-girls": "魔法",
+  "cute-animals": "動物",
+  "nature": "自然",
+  "achievements": "獎勵",
 };
 
 const categoryIcons: Record<StickerCategory, string> = {
@@ -58,7 +58,7 @@ export default function Stickers() {
           animate={{ opacity: 1, y: 0 }}
         >
           <Star className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">My Stickers</h1>
+          <h1 className="text-2xl font-bold text-foreground">我嘅貼紙</h1>
         </motion.div>
 
         <motion.div
@@ -70,10 +70,10 @@ export default function Stickers() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                <span className="font-medium text-foreground">Next Sticker</span>
+                <span className="font-medium text-foreground">下一個貼紙</span>
               </div>
               <span className="text-sm text-muted-foreground" data-testid="text-points-total">
-                {totalPoints} points
+                {totalPoints} 積分
               </span>
             </div>
 
@@ -86,7 +86,7 @@ export default function Stickers() {
                   <div className="flex-1">
                     <p className="font-semibold text-foreground">{nextSticker.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {pointsNeeded} more points needed
+                      仲差 {pointsNeeded} 積分
                     </p>
                   </div>
                 </div>
@@ -94,8 +94,8 @@ export default function Stickers() {
               </>
             ) : (
               <div className="text-center py-4">
-                <p className="font-semibold text-foreground">All stickers unlocked!</p>
-                <p className="text-sm text-muted-foreground">You're a superstar!</p>
+                <p className="font-semibold text-foreground">所有貼紙已解鎖！</p>
+                <p className="text-sm text-muted-foreground">你係超級巨星！</p>
               </div>
             )}
           </Card>
@@ -170,7 +170,7 @@ export default function Stickers() {
                                 <div className="flex items-center gap-1 mt-1">
                                   <Lock className="w-3 h-3 text-muted-foreground/50" />
                                   <span className="text-[10px] text-muted-foreground/50">
-                                    {sticker.requiredPoints} pts
+                                    {sticker.requiredPoints} 分
                                   </span>
                                 </div>
                               )}
@@ -199,16 +199,16 @@ export default function Stickers() {
               />
               <div>
                 <p className="font-semibold text-foreground">
-                  {unlockedStickers.length} / {stickers.length} Stickers
+                  {unlockedStickers.length} / {stickers.length} 個貼紙
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {unlockedStickers.length === 0
-                    ? "Complete tasks to earn stickers!"
+                    ? "完成任務可以獲得貼紙！"
                     : unlockedStickers.length < 5
-                    ? "Great start! Keep going!"
+                    ? "好開始！繼續加油！"
                     : unlockedStickers.length < 10
-                    ? "Amazing collection!"
-                    : "You're a sticker master!"}
+                    ? "好叻嘅收藏！"
+                    : "你係貼紙大師！"}
                 </p>
               </div>
             </div>

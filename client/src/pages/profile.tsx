@@ -24,28 +24,28 @@ import type { UserProgress } from "@shared/schema";
 const statCards = [
   { 
     key: "totalPoints",
-    label: "Total Points", 
+    label: "總積分", 
     icon: Trophy, 
     color: "text-yellow-500",
     bg: "bg-yellow-100 dark:bg-yellow-900/30"
   },
   { 
     key: "currentStreak",
-    label: "Day Streak", 
+    label: "連續日數", 
     icon: Flame, 
     color: "text-orange-500",
     bg: "bg-orange-100 dark:bg-orange-900/30"
   },
   { 
     key: "completedTasks",
-    label: "Tasks Done", 
+    label: "已完成任務", 
     icon: CheckCircle2, 
     color: "text-green-500",
     bg: "bg-green-100 dark:bg-green-900/30"
   },
   { 
     key: "timerSessionsCompleted",
-    label: "Focus Sessions", 
+    label: "專注時段", 
     icon: Clock, 
     color: "text-blue-500",
     bg: "bg-blue-100 dark:bg-blue-900/30"
@@ -66,11 +66,11 @@ export default function Profile() {
 
   const getLevel = () => {
     const points = progress?.totalPoints || 0;
-    if (points >= 500) return { level: 5, title: "Superstar", emoji: "crown" };
-    if (points >= 200) return { level: 4, title: "Champion", emoji: "trophy" };
-    if (points >= 100) return { level: 3, title: "Rising Star", emoji: "star" };
-    if (points >= 50) return { level: 2, title: "Helper", emoji: "heart" };
-    return { level: 1, title: "Beginner", emoji: "sparkle" };
+    if (points >= 500) return { level: 5, title: "超級巨星", emoji: "crown" };
+    if (points >= 200) return { level: 4, title: "冠軍", emoji: "trophy" };
+    if (points >= 100) return { level: 3, title: "新星", emoji: "star" };
+    if (points >= 50) return { level: 2, title: "小幫手", emoji: "heart" };
+    return { level: 1, title: "新手", emoji: "sparkle" };
   };
 
   const levelInfo = getLevel();
@@ -84,7 +84,7 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
         >
           <User className="w-6 h-6 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">Profile</h1>
+          <h1 className="text-2xl font-bold text-foreground">個人檔案</h1>
         </motion.div>
 
         <motion.div
@@ -101,7 +101,7 @@ export default function Profile() {
               </Avatar>
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-foreground" data-testid="text-username">
-                  Little Star
+                  小星星
                 </h2>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium">
@@ -122,7 +122,7 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h3 className="font-semibold text-foreground mb-4">Your Progress</h3>
+          <h3 className="font-semibold text-foreground mb-4">你嘅進度</h3>
           <div className="grid grid-cols-2 gap-3 mb-6">
             {statCards.map((stat, index) => {
               const Icon = stat.icon;
@@ -155,7 +155,7 @@ export default function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h3 className="font-semibold text-foreground mb-4">Settings</h3>
+          <h3 className="font-semibold text-foreground mb-4">設定</h3>
           <Card className="divide-y divide-border">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
@@ -167,9 +167,9 @@ export default function Profile() {
                   )}
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Dark Mode</p>
+                  <p className="font-medium text-foreground">深色模式</p>
                   <p className="text-sm text-muted-foreground">
-                    {theme === "dark" ? "On" : "Off"}
+                    {theme === "dark" ? "開啟" : "關閉"}
                   </p>
                 </div>
               </div>
@@ -186,8 +186,8 @@ export default function Profile() {
                   <Bell className="w-5 h-5 text-pink-500" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Notifications</p>
-                  <p className="text-sm text-muted-foreground">Task reminders</p>
+                  <p className="font-medium text-foreground">通知</p>
+                  <p className="text-sm text-muted-foreground">任務提醒</p>
                 </div>
               </div>
               <Switch defaultChecked data-testid="switch-notifications" />
@@ -199,8 +199,8 @@ export default function Profile() {
                   <Palette className="w-5 h-5 text-blue-500" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">Theme Color</p>
-                  <p className="text-sm text-muted-foreground">Pink</p>
+                  <p className="font-medium text-foreground">主題顏色</p>
+                  <p className="text-sm text-muted-foreground">粉紅色</p>
                 </div>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground" />
@@ -217,10 +217,10 @@ export default function Profile() {
           <Card className="p-6 text-center bg-card">
             <Star className="w-12 h-12 text-primary mx-auto mb-3" />
             <h3 className="font-bold text-lg text-foreground mb-1">
-              Keep up the great work!
+              繼續加油！
             </h3>
             <p className="text-sm text-muted-foreground">
-              Complete more tasks to unlock new stickers and level up!
+              完成更多任務解鎖新貼紙同升級！
             </p>
           </Card>
         </motion.div>
