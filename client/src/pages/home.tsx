@@ -97,10 +97,10 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div>
-            <h1 className="text-2xl font-bold text-foreground" data-testid="text-greeting">
+            <h1 className="text-4xl font-bold text-foreground" data-testid="text-greeting">
               {getGreeting()}!
             </h1>
-            <p className="text-muted-foreground mt-1">今日加油！</p>
+            <p className="text-lg text-muted-foreground mt-2">今日加油！</p>
           </div>
           <Mascot mood={getMascotMood()} size="md" />
         </motion.div>
