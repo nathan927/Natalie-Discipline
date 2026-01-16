@@ -3,11 +3,14 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { sql } from "drizzle-orm";
 
+export * from "./models/auth";
+
 export const stickerCategories = ["magical-girls", "cute-animals", "nature", "achievements"] as const;
 export type StickerCategory = typeof stickerCategories[number];
 
 export const tasks = pgTable("tasks", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
   title: text("title").notNull(),
   description: text("description"),
   scheduledTime: text("scheduled_time"),
@@ -35,10 +38,21 @@ export type Task = typeof tasks.$inferSelect;
 
 export const timerSessions = pgTable("timer_sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
   durationMinutes: integer("duration_minutes").notNull(),
   startedAt: text("started_at").notNull(),
   completedAt: text("completed_at"),
   taskId: text("task_id"),
+});
+
+export const userProgress = pgTable("user_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().unique(),
+  totalPoints: integer("total_points").notNull().default(0),
+  completedTasks: integer("completed_tasks").notNull().default(0),
+  currentStreak: integer("current_streak").notNull().default(0),
+  unlockedStickers: text("unlocked_stickers").array().notNull().default(sql`ARRAY[]::text[]`),
+  timerSessionsCompleted: integer("timer_sessions_completed").notNull().default(0),
 });
 
 export const insertTimerSessionSchema = createInsertSchema(timerSessions).pick({
@@ -127,16 +141,4 @@ export const stickers: Sticker[] = [
   { id: "a-12", name: "終極冠軍", imageSrc: "ultimate_champion_girl", category: "achievements", requiredPoints: 500 },
 ];
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
-
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type UserProgressRecord = typeof userProgress.$inferSelect;

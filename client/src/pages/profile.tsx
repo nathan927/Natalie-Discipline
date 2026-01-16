@@ -11,14 +11,16 @@ import {
   Sun,
   ChevronRight,
   Bell,
-  Palette
+  Palette,
+  LogOut
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mascot } from "@/components/mascot";
 import { useTheme } from "@/components/theme-provider";
+import { useAuth } from "@/hooks/use-auth";
 import type { UserProgress } from "@shared/schema";
 
 const statCards = [
@@ -54,10 +56,14 @@ const statCards = [
 
 export default function Profile() {
   const { theme, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
 
   const { data: progress } = useQuery<UserProgress>({
     queryKey: ["/api/progress"],
   });
+
+  const displayName = user?.firstName || user?.email?.split("@")[0] || "小朋友";
+  const initials = displayName.charAt(0).toUpperCase();
 
   const getProgressValue = (key: string): number => {
     if (!progress) return 0;
@@ -95,14 +101,22 @@ export default function Profile() {
           <Card className="p-6 mb-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
             <div className="flex items-center gap-4">
               <Avatar className="w-20 h-20 border-4 border-primary/20">
+                {user?.profileImageUrl && (
+                  <AvatarImage src={user.profileImageUrl} alt={displayName} />
+                )}
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
-                  N
+                  {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-foreground" data-testid="text-username">
-                  小星星
+                  {displayName}
                 </h2>
+                {user?.email && (
+                  <p className="text-sm text-muted-foreground" data-testid="text-email">
+                    {user.email}
+                  </p>
+                )}
                 <div className="flex items-center gap-2 mt-1">
                   <div className="px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium">
                     Level {levelInfo.level}
@@ -223,6 +237,23 @@ export default function Profile() {
               完成更多任務解鎖新貼紙同升級！
             </p>
           </Card>
+        </motion.div>
+
+        <motion.div
+          className="mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => logout()}
+            data-testid="button-logout"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            登出
+          </Button>
         </motion.div>
       </div>
     </div>
