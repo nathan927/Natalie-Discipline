@@ -75,6 +75,46 @@ export default function Home() {
     ? Math.round((completedTasks.length / tasks.length) * 100) 
     : 0;
 
+  const encouragingMessages = [
+    "今日加油！",
+    "你可以做到！",
+    "每一步都係進步！",
+    "相信自己！",
+    "你係最棒嘅！",
+    "繼續努力！",
+    "做得好！",
+    "保持專注！",
+    "一齊加油！",
+    "你好叻！",
+    "堅持就係勝利！",
+    "小小進步，大大成就！",
+    "今日會更好！",
+    "開心學習！",
+    "你係超級巨星！",
+    "夢想會實現！",
+    "一步一步嚟！",
+    "勇敢向前！",
+    "你有無限潛力！",
+    "加油，小勇士！",
+    "今日係美好嘅一日！",
+    "笑住去迎接挑戰！",
+    "努力會有回報！",
+    "你係獨一無二！",
+    "開心每一刻！",
+    "向目標進發！",
+    "永不放棄！",
+    "你嘅努力會發光！",
+    "今日做最好嘅自己！",
+    "一齊創造奇蹟！",
+  ];
+
+  const getRandomMessage = () => {
+    const index = Math.floor(Math.random() * encouragingMessages.length);
+    return encouragingMessages[index];
+  };
+
+  const [todayMessage] = useState(() => getRandomMessage());
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return "早晨";
@@ -100,7 +140,7 @@ export default function Home() {
             <h1 className="text-4xl font-bold text-foreground" data-testid="text-greeting">
               {getGreeting()}!
             </h1>
-            <p className="text-lg text-muted-foreground mt-2">今日加油！</p>
+            <p className="text-lg text-muted-foreground mt-2" data-testid="text-encouraging">{todayMessage}</p>
           </div>
           <Mascot mood={getMascotMood()} size="md" />
         </motion.div>

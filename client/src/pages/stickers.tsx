@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Lock, Sparkles } from "lucide-react";
+import { Star, Lock, Sparkles, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { StickerIcon } from "@/components/sticker-icon";
+import { StickerIcon, imageMap } from "@/components/sticker-icon";
 import { Mascot } from "@/components/mascot";
-import { stickers, stickerCategories, type StickerCategory, type UserProgress } from "@shared/schema";
+import { stickers, stickerCategories, type StickerCategory, type UserProgress, type Sticker } from "@shared/schema";
 
 const categoryLabels: Record<StickerCategory, string> = {
   "magical-girls": "魔法",
@@ -27,6 +27,7 @@ const categoryIcons: Record<StickerCategory, string> = {
 export default function Stickers() {
   const [selectedCategory, setSelectedCategory] = useState<StickerCategory>("magical-girls");
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
+  const [fullScreenSticker, setFullScreenSticker] = useState<Sticker | null>(null);
 
   const { data: progress } = useQuery<UserProgress>({
     queryKey: ["/api/progress"],
@@ -151,9 +152,15 @@ export default function Stickers() {
                                   ? "ring-2 ring-primary"
                                   : ""
                               }`}
-                              onClick={() => setSelectedSticker(
-                                selectedSticker === sticker.id ? null : sticker.id
-                              )}
+                              onClick={() => {
+                                if (isUnlocked) {
+                                  setFullScreenSticker(sticker);
+                                } else {
+                                  setSelectedSticker(
+                                    selectedSticker === sticker.id ? null : sticker.id
+                                  );
+                                }
+                              }}
                               data-testid={`sticker-${sticker.id}`}
                             >
                               <StickerIcon
@@ -215,6 +222,71 @@ export default function Stickers() {
           </Card>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {fullScreenSticker && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setFullScreenSticker(null)}
+            data-testid="sticker-fullscreen-modal"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 z-10"
+              onClick={() => setFullScreenSticker(null)}
+              data-testid="button-close-fullscreen"
+            >
+              <X className="w-6 h-6" />
+            </Button>
+
+            <motion.div
+              className="flex flex-col items-center gap-6 p-8 max-w-sm mx-auto"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.div
+                className="w-72 h-72 rounded-3xl overflow-hidden shadow-2xl bg-card flex items-center justify-center"
+                animate={{ 
+                  boxShadow: [
+                    "0 0 20px rgba(236, 72, 153, 0.3)",
+                    "0 0 40px rgba(236, 72, 153, 0.5)",
+                    "0 0 20px rgba(236, 72, 153, 0.3)"
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <img 
+                  src={imageMap[fullScreenSticker.imageSrc]} 
+                  alt={fullScreenSticker.name}
+                  className="w-full h-full object-contain p-2"
+                />
+              </motion.div>
+
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-foreground mb-2">
+                  {fullScreenSticker.name}
+                </h2>
+                <p className="text-muted-foreground">
+                  {categoryLabels[fullScreenSticker.category]} 系列
+                </p>
+                <div className="flex items-center justify-center gap-2 mt-3">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  <span className="text-primary font-medium">
+                    {fullScreenSticker.requiredPoints} 積分解鎖
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

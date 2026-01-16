@@ -60,7 +60,7 @@ import bakingChefGirl from "@assets/generated_images/baking_chef_girl.png";
 import ballerinaDancerGirl from "@assets/generated_images/ballerina_dancer_girl.png";
 import ultimateChampionGirl from "@assets/generated_images/ultimate_champion_girl.png";
 
-const imageMap: Record<string, string> = {
+export const imageMap: Record<string, string> = {
   // Magical Girls
   magical_girl_with_wand: magicalGirlWithWand,
   princess_magical_girl: princessMagicalGirl,
