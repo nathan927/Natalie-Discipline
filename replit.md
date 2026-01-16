@@ -16,6 +16,7 @@ Natalie is a self-discipline and habit-building app designed for children, featu
 - PWA (Progressive Web App) implementation for Android installation
 - Service worker with offline caching support
 - Custom app icons for Android home screen
+- **Offline Mode with Sync**: Full offline support with local data caching and automatic sync when online
 
 ## System Architecture
 
@@ -32,9 +33,21 @@ The frontend follows a mobile-first design with bottom navigation (5 tabs: ä¸»é 
 
 ### PWA Configuration
 - **Manifest**: `/manifest.json` with app metadata in Traditional Chinese
-- **Service Worker**: `/sw.js` with cache-first strategy for static assets
+- **Service Worker**: `/sw.js` with cache-first strategy for static assets and API caching
 - **Icons**: `/icons/icon-192.png` and `/icons/icon-512.png` for Android installation
-- **Offline Support**: Caches essential assets and provides offline fallback
+- **Offline Support**: Full offline mode with localStorage caching and sync queue
+
+### Offline Mode Architecture
+- **Local Storage**: Tasks and progress cached in localStorage (`natalie_tasks`, `natalie_progress`)
+- **Sync Queue**: Pending operations stored in `natalie_sync_queue` for later sync
+- **ID Mapping**: Local-to-server ID mapping (`natalie_id_map`) ensures data integrity after sync
+- **Offline Indicator**: UI component shows current network status and pending sync count
+- **Auto Sync**: Automatically syncs pending operations when connection is restored
+- **Key Files**:
+  - `client/src/lib/offline-storage.ts`: localStorage utilities
+  - `client/src/lib/sync-manager.ts`: Sync queue processing
+  - `client/src/hooks/use-online-status.ts`: Network status detection
+  - `client/src/components/offline-indicator.tsx`: Status UI
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
