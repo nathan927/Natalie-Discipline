@@ -12,6 +12,42 @@ export interface SyncOperation {
   type: "CREATE_TASK" | "UPDATE_TASK" | "DELETE_TASK" | "COMPLETE_TASK" | "TIMER_COMPLETE";
   data: any;
   timestamp: number;
+  localTaskId?: string;
+}
+
+const LOCAL_TO_SERVER_ID_MAP_KEY = "natalie_id_map";
+
+export function getIdMap(): Record<string, string> {
+  try {
+    const data = localStorage.getItem(LOCAL_TO_SERVER_ID_MAP_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function setIdMapping(localId: string, serverId: string): void {
+  const map = getIdMap();
+  map[localId] = serverId;
+  localStorage.setItem(LOCAL_TO_SERVER_ID_MAP_KEY, JSON.stringify(map));
+}
+
+export function getServerId(localId: string): string {
+  const map = getIdMap();
+  return map[localId] || localId;
+}
+
+export function clearIdMap(): void {
+  localStorage.removeItem(LOCAL_TO_SERVER_ID_MAP_KEY);
+}
+
+export function updateLocalTaskId(oldId: string, newId: string): void {
+  const tasks = getLocalTasks();
+  const index = tasks.findIndex(t => t.id === oldId);
+  if (index !== -1) {
+    tasks[index] = { ...tasks[index], id: newId };
+    setLocalTasks(tasks);
+  }
 }
 
 export function getLocalTasks(): Task[] {

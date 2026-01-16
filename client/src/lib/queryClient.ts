@@ -103,8 +103,9 @@ export async function createTaskOfflineAware(taskData: any): Promise<Task> {
     addLocalTask(task);
     return task;
   } else {
+    const localId = generateLocalId();
     const localTask: Task = {
-      id: generateLocalId(),
+      id: localId,
       title: taskData.title,
       description: taskData.description || null,
       scheduledTime: taskData.scheduledTime || null,
@@ -116,7 +117,7 @@ export async function createTaskOfflineAware(taskData: any): Promise<Task> {
       recurring: taskData.recurring || "none",
     };
     addLocalTask(localTask);
-    addToSyncQueue({ type: "CREATE_TASK", data: taskData });
+    addToSyncQueue({ type: "CREATE_TASK", data: taskData, localTaskId: localId });
     return localTask;
   }
 }

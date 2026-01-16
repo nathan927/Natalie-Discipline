@@ -9,7 +9,12 @@ import { TaskCard } from "@/components/task-card";
 import { AddTaskModal } from "@/components/add-task-modal";
 import { CelebrationModal } from "@/components/celebration-modal";
 import { Mascot } from "@/components/mascot";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { 
+  queryClient, 
+  createTaskOfflineAware, 
+  completeTaskOfflineAware, 
+  deleteTaskOfflineAware 
+} from "@/lib/queryClient";
 import type { Task, UserProgress, Sticker, InsertTask } from "@shared/schema";
 import { stickers } from "@shared/schema";
 
@@ -32,7 +37,7 @@ export default function Home() {
 
   const completeMutation = useMutation({
     mutationFn: async (taskId: string) => {
-      return apiRequest("POST", `/api/tasks/${taskId}/complete`);
+      return completeTaskOfflineAware(taskId);
     },
     onSuccess: async (_, taskId) => {
       const task = tasks.find(t => t.id === taskId);
@@ -52,7 +57,7 @@ export default function Home() {
 
   const deleteMutation = useMutation({
     mutationFn: async (taskId: string) => {
-      return apiRequest("DELETE", `/api/tasks/${taskId}`);
+      return deleteTaskOfflineAware(taskId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
@@ -61,7 +66,7 @@ export default function Home() {
 
   const addMutation = useMutation({
     mutationFn: async (task: InsertTask & { stickerId?: string; scheduledDate?: string }) => {
-      return apiRequest("POST", "/api/tasks", task);
+      return createTaskOfflineAware(task);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });

@@ -5,6 +5,10 @@ import {
   setLastSyncTime,
   setLocalTasks,
   setLocalProgress,
+  setIdMapping,
+  getServerId,
+  updateLocalTaskId,
+  deleteLocalTask,
   type SyncOperation,
 } from "./offline-storage";
 import { apiRequest } from "./queryClient";
@@ -26,6 +30,13 @@ export async function syncPendingOperations(): Promise<{
       synced++;
     } catch (error) {
       console.error("Sync operation failed:", operation, error);
+      if (operation.type === "DELETE_TASK" || operation.type === "COMPLETE_TASK") {
+        const localId = operation.data.id;
+        if (localId.startsWith("local_")) {
+          removeFromSyncQueue(operation.id);
+          deleteLocalTask(localId);
+        }
+      }
       failed++;
     }
   }
@@ -39,18 +50,38 @@ export async function syncPendingOperations(): Promise<{
 
 async function processSyncOperation(operation: SyncOperation): Promise<void> {
   switch (operation.type) {
-    case "CREATE_TASK":
-      await apiRequest("POST", "/api/tasks", operation.data);
+    case "CREATE_TASK": {
+      const res = await apiRequest("POST", "/api/tasks", operation.data);
+      const serverTask: Task = await res.json();
+      
+      if (operation.localTaskId) {
+        setIdMapping(operation.localTaskId, serverTask.id);
+        updateLocalTaskId(operation.localTaskId, serverTask.id);
+      }
       break;
-    case "UPDATE_TASK":
-      await apiRequest("PATCH", `/api/tasks/${operation.data.id}`, operation.data.updates);
+    }
+    case "UPDATE_TASK": {
+      const serverId = getServerId(operation.data.id);
+      await apiRequest("PATCH", `/api/tasks/${serverId}`, operation.data.updates);
       break;
-    case "DELETE_TASK":
-      await apiRequest("DELETE", `/api/tasks/${operation.data.id}`);
+    }
+    case "DELETE_TASK": {
+      const serverId = getServerId(operation.data.id);
+      if (serverId.startsWith("local_")) {
+        deleteLocalTask(serverId);
+      } else {
+        await apiRequest("DELETE", `/api/tasks/${serverId}`);
+      }
       break;
-    case "COMPLETE_TASK":
-      await apiRequest("POST", `/api/tasks/${operation.data.id}/complete`);
+    }
+    case "COMPLETE_TASK": {
+      const serverId = getServerId(operation.data.id);
+      if (serverId.startsWith("local_")) {
+        throw new Error("Cannot complete offline-only task - waiting for sync");
+      }
+      await apiRequest("POST", `/api/tasks/${serverId}/complete`);
       break;
+    }
     case "TIMER_COMPLETE":
       await apiRequest("POST", "/api/timer/complete", operation.data);
       break;
