@@ -1,4 +1,4 @@
-const CACHE_NAME = 'natalie-v3';
+const CACHE_NAME = 'natalie-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

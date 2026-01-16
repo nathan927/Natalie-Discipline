@@ -97,7 +97,7 @@ export function CelebrationModal({
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", delay: 0.2, damping: 10 }}
               >
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
                   {sticker ? (
                     <StickerIcon sticker={sticker} unlocked={true} size="lg" />
                   ) : (

@@ -31,17 +31,33 @@ interface AddTaskModalProps {
 
 const presetDurations = [15, 30, 45, 60];
 
+const getRandomStickers = () => {
+  const categories = ["magical-girls", "cute-animals", "nature", "achievements"] as const;
+  const selected: typeof stickers[number][] = [];
+  categories.forEach(cat => {
+    const catStickers = stickers.filter(s => s.category === cat);
+    if (catStickers.length > 0) {
+      const randomIndex = Math.floor(Math.random() * Math.min(catStickers.length, 3));
+      selected.push(catStickers[randomIndex]);
+    }
+  });
+  return selected.slice(0, 5);
+};
+
 const formSchema = z.object({
   title: z.string().min(1, "請輸入任務標題"),
   scheduledTime: z.string().optional(),
   durationMinutes: z.number().min(1).optional(),
   recurring: z.enum(["daily", "weekly", "none"]).default("none"),
-  stickerId: z.string().optional(),
+  stickerId: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskModalProps) {
+  const availableStickers = getRandomStickers();
+  const defaultStickerId = availableStickers[0]?.id || "mg-1";
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,11 +65,11 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
       scheduledTime: "",
       durationMinutes: 30,
       recurring: "none",
-      stickerId: undefined,
+      stickerId: defaultStickerId,
     },
   });
 
-  const magicalStickers = stickers.filter(s => s.category === "magical-girls").slice(0, 5);
+  const displayStickers = availableStickers;
 
   const handleSubmit = (values: FormValues) => {
     onAdd({
@@ -211,8 +227,8 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                         <Sparkles className="w-4 h-4 text-primary" />
                         獎勵貼紙
                       </FormLabel>
-                      <div className="flex gap-3 justify-center py-2">
-                        {magicalStickers.map((sticker) => (
+                      <div className="flex gap-3 justify-center py-2 flex-wrap">
+                        {displayStickers.map((sticker) => (
                           <motion.div
                             key={sticker.id}
                             whileTap={{ scale: 0.9 }}
