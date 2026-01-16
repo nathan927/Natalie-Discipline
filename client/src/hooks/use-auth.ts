@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { User } from "@shared/models/auth";
+import { setCurrentUser, clearCurrentUser } from "@/lib/offline-storage";
 
 async function fetchUser(): Promise<User | null> {
   const response = await fetch("/api/auth/user", {
@@ -18,6 +20,7 @@ async function fetchUser(): Promise<User | null> {
 }
 
 async function logout(): Promise<void> {
+  clearCurrentUser();
   window.location.href = "/api/logout";
 }
 
@@ -29,6 +32,12 @@ export function useAuth() {
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  useEffect(() => {
+    if (user?.id) {
+      setCurrentUser(user.id);
+    }
+  }, [user]);
 
   const logoutMutation = useMutation({
     mutationFn: logout,

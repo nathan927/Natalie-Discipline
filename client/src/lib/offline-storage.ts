@@ -1,11 +1,33 @@
 import type { Task, UserProgress } from "@shared/schema";
 
-const STORAGE_KEYS = {
+const BASE_STORAGE_KEYS = {
   TASKS: "natalie_tasks",
   PROGRESS: "natalie_progress",
   SYNC_QUEUE: "natalie_sync_queue",
   LAST_SYNC: "natalie_last_sync",
+  ID_MAP: "natalie_id_map",
+  CURRENT_USER: "natalie_current_user",
 };
+
+function getUserKey(baseKey: string, userId?: string): string {
+  if (!userId) {
+    const stored = localStorage.getItem(BASE_STORAGE_KEYS.CURRENT_USER);
+    userId = stored || "anonymous";
+  }
+  return `${baseKey}_${userId}`;
+}
+
+export function setCurrentUser(userId: string): void {
+  localStorage.setItem(BASE_STORAGE_KEYS.CURRENT_USER, userId);
+}
+
+export function getCurrentUser(): string | null {
+  return localStorage.getItem(BASE_STORAGE_KEYS.CURRENT_USER);
+}
+
+export function clearCurrentUser(): void {
+  localStorage.removeItem(BASE_STORAGE_KEYS.CURRENT_USER);
+}
 
 export interface SyncOperation {
   id: string;
@@ -15,11 +37,10 @@ export interface SyncOperation {
   localTaskId?: string;
 }
 
-const LOCAL_TO_SERVER_ID_MAP_KEY = "natalie_id_map";
-
 export function getIdMap(): Record<string, string> {
   try {
-    const data = localStorage.getItem(LOCAL_TO_SERVER_ID_MAP_KEY);
+    const key = getUserKey(BASE_STORAGE_KEYS.ID_MAP);
+    const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : {};
   } catch {
     return {};
@@ -29,7 +50,8 @@ export function getIdMap(): Record<string, string> {
 export function setIdMapping(localId: string, serverId: string): void {
   const map = getIdMap();
   map[localId] = serverId;
-  localStorage.setItem(LOCAL_TO_SERVER_ID_MAP_KEY, JSON.stringify(map));
+  const key = getUserKey(BASE_STORAGE_KEYS.ID_MAP);
+  localStorage.setItem(key, JSON.stringify(map));
 }
 
 export function getServerId(localId: string): string {
@@ -38,7 +60,8 @@ export function getServerId(localId: string): string {
 }
 
 export function clearIdMap(): void {
-  localStorage.removeItem(LOCAL_TO_SERVER_ID_MAP_KEY);
+  const key = getUserKey(BASE_STORAGE_KEYS.ID_MAP);
+  localStorage.removeItem(key);
 }
 
 export function updateLocalTaskId(oldId: string, newId: string): void {
@@ -52,7 +75,8 @@ export function updateLocalTaskId(oldId: string, newId: string): void {
 
 export function getLocalTasks(): Task[] {
   try {
-    const data = localStorage.getItem(STORAGE_KEYS.TASKS);
+    const key = getUserKey(BASE_STORAGE_KEYS.TASKS);
+    const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : [];
   } catch {
     return [];
@@ -61,7 +85,8 @@ export function getLocalTasks(): Task[] {
 
 export function setLocalTasks(tasks: Task[]): void {
   try {
-    localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+    const key = getUserKey(BASE_STORAGE_KEYS.TASKS);
+    localStorage.setItem(key, JSON.stringify(tasks));
   } catch (e) {
     console.error("Failed to save tasks to localStorage", e);
   }
@@ -96,7 +121,8 @@ export function deleteLocalTask(id: string): boolean {
 
 export function getLocalProgress(): UserProgress {
   try {
-    const data = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+    const key = getUserKey(BASE_STORAGE_KEYS.PROGRESS);
+    const data = localStorage.getItem(key);
     return data
       ? JSON.parse(data)
       : {
@@ -119,7 +145,8 @@ export function getLocalProgress(): UserProgress {
 
 export function setLocalProgress(progress: UserProgress): void {
   try {
-    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
+    const key = getUserKey(BASE_STORAGE_KEYS.PROGRESS);
+    localStorage.setItem(key, JSON.stringify(progress));
   } catch (e) {
     console.error("Failed to save progress to localStorage", e);
   }
@@ -127,7 +154,8 @@ export function setLocalProgress(progress: UserProgress): void {
 
 export function getSyncQueue(): SyncOperation[] {
   try {
-    const data = localStorage.getItem(STORAGE_KEYS.SYNC_QUEUE);
+    const key = getUserKey(BASE_STORAGE_KEYS.SYNC_QUEUE);
+    const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : [];
   } catch {
     return [];
@@ -136,27 +164,31 @@ export function getSyncQueue(): SyncOperation[] {
 
 export function addToSyncQueue(operation: Omit<SyncOperation, "id" | "timestamp">): void {
   const queue = getSyncQueue();
+  const key = getUserKey(BASE_STORAGE_KEYS.SYNC_QUEUE);
   queue.push({
     ...operation,
     id: `sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     timestamp: Date.now(),
   });
-  localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify(queue));
+  localStorage.setItem(key, JSON.stringify(queue));
 }
 
 export function removeFromSyncQueue(id: string): void {
   const queue = getSyncQueue();
   const filtered = queue.filter((op) => op.id !== id);
-  localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify(filtered));
+  const key = getUserKey(BASE_STORAGE_KEYS.SYNC_QUEUE);
+  localStorage.setItem(key, JSON.stringify(filtered));
 }
 
 export function clearSyncQueue(): void {
-  localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify([]));
+  const key = getUserKey(BASE_STORAGE_KEYS.SYNC_QUEUE);
+  localStorage.setItem(key, JSON.stringify([]));
 }
 
 export function getLastSyncTime(): number | null {
   try {
-    const data = localStorage.getItem(STORAGE_KEYS.LAST_SYNC);
+    const key = getUserKey(BASE_STORAGE_KEYS.LAST_SYNC);
+    const data = localStorage.getItem(key);
     return data ? parseInt(data, 10) : null;
   } catch {
     return null;
@@ -164,7 +196,8 @@ export function getLastSyncTime(): number | null {
 }
 
 export function setLastSyncTime(time: number = Date.now()): void {
-  localStorage.setItem(STORAGE_KEYS.LAST_SYNC, time.toString());
+  const key = getUserKey(BASE_STORAGE_KEYS.LAST_SYNC);
+  localStorage.setItem(key, time.toString());
 }
 
 export function hasPendingSyncOperations(): boolean {
