@@ -39,6 +39,7 @@ export async function registerRoutes(
       const task = await storage.createTask({
         ...result.data,
         stickerId: req.body.stickerId,
+        scheduledDate: req.body.scheduledDate,
       });
       res.status(201).json(task);
     } catch (error) {

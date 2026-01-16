@@ -81,8 +81,11 @@ export class MemStorage implements IStorage {
     return this.tasks.get(id);
   }
 
-  async createTask(task: InsertTask): Promise<Task> {
+  async createTask(task: InsertTask & { scheduledDate?: string }): Promise<Task> {
     const id = randomUUID();
+    const taskDate = task.scheduledDate 
+      ? new Date(task.scheduledDate + "T00:00:00").toISOString()
+      : new Date().toISOString();
     const newTask: Task = {
       id,
       title: task.title,
@@ -92,7 +95,7 @@ export class MemStorage implements IStorage {
       completed: false,
       completedAt: null,
       stickerId: task.stickerId || null,
-      createdAt: new Date().toISOString(),
+      createdAt: taskDate,
       recurring: task.recurring || "none",
     };
     this.tasks.set(id, newTask);

@@ -25,7 +25,7 @@ import { StickerIcon } from "./sticker-icon";
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (task: InsertTask & { stickerId?: string }) => void;
+  onAdd: (task: InsertTask & { stickerId?: string; scheduledDate?: string }) => void;
   selectedDate?: string;
 }
 
@@ -78,6 +78,7 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
       durationMinutes: values.durationMinutes,
       recurring: values.recurring,
       stickerId: values.stickerId,
+      scheduledDate: selectedDate,
     });
 
     form.reset();

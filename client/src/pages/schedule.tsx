@@ -14,7 +14,7 @@ import { AddTaskModal } from "@/components/add-task-modal";
 import { CelebrationModal } from "@/components/celebration-modal";
 import { Mascot } from "@/components/mascot";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import type { Task, Sticker } from "@shared/schema";
+import type { Task, Sticker, InsertTask } from "@shared/schema";
 import { stickers } from "@shared/schema";
 import { 
   format, 
@@ -69,7 +69,7 @@ export default function Schedule() {
   });
 
   const addMutation = useMutation({
-    mutationFn: async (task: any) => {
+    mutationFn: async (task: InsertTask & { stickerId?: string; scheduledDate?: string }) => {
       return apiRequest("POST", "/api/tasks", task);
     },
     onSuccess: () => {

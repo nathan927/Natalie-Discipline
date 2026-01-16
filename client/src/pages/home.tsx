@@ -60,7 +60,7 @@ export default function Home() {
   });
 
   const addMutation = useMutation({
-    mutationFn: async (task: InsertTask & { stickerId?: string }) => {
+    mutationFn: async (task: InsertTask & { stickerId?: string; scheduledDate?: string }) => {
       return apiRequest("POST", "/api/tasks", task);
     },
     onSuccess: () => {
