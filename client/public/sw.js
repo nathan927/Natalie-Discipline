@@ -1,4 +1,4 @@
-const CACHE_NAME = 'natalie-v4';
+const CACHE_NAME = 'natalie-v5';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -7,6 +7,9 @@ const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];
+
+const API_CACHE_NAME = 'natalie-api-v1';
+const API_CACHE_URLS = ['/api/tasks', '/api/progress'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -21,7 +24,9 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((cacheName) => cacheName !== CACHE_NAME)
+          .filter((cacheName) => 
+            cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME
+          )
           .map((cacheName) => caches.delete(cacheName))
       );
     }).then(() => self.clients.claim())
@@ -30,20 +35,14 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  
-  if (request.method !== 'GET') return;
-  
   const url = new URL(request.url);
   
+  if (request.method !== 'GET') {
+    return;
+  }
+  
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request).catch(() => {
-        return new Response(JSON.stringify({ error: '離線模式' }), {
-          status: 503,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      })
-    );
+    event.respondWith(handleApiRequest(request, url.pathname));
     return;
   }
   
@@ -66,4 +65,45 @@ self.addEventListener('fetch', (event) => {
       }
     })
   );
+});
+
+async function handleApiRequest(request, pathname) {
+  const shouldCache = API_CACHE_URLS.some(url => pathname === url);
+  
+  try {
+    const networkResponse = await fetch(request);
+    
+    if (networkResponse.ok && shouldCache) {
+      const cache = await caches.open(API_CACHE_NAME);
+      cache.put(request, networkResponse.clone());
+    }
+    
+    return networkResponse;
+  } catch (error) {
+    if (shouldCache) {
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+    }
+    
+    return new Response(JSON.stringify({ 
+      error: '離線模式',
+      offline: true,
+      message: '你目前處於離線狀態。資料將喺上線後同步。'
+    }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_API_CACHE') {
+    caches.delete(API_CACHE_NAME);
+  }
 });

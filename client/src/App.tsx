@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { OfflineIndicator } from "@/components/offline-indicator";
 import Home from "@/pages/home";
 import Schedule from "@/pages/schedule";
 import Timer from "@/pages/timer";
@@ -30,6 +31,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <TooltipProvider>
+          <OfflineIndicator />
           <div className="min-h-screen bg-background">
             <Router />
             <BottomNavigation />
