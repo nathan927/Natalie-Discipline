@@ -17,6 +17,11 @@ Natalie is a self-discipline and habit-building app designed for children, featu
 - Service worker with offline caching support
 - Custom app icons for Android home screen
 - **Offline Mode with Sync**: Full offline support with local data caching and automatic sync when online
+- **Multi-User Authentication**: Google SSO via Replit Auth for multi-user support
+  - Each child has separate progress data
+  - Login page with mascot branding
+  - Profile page shows user info and logout button
+  - Offline storage uses userId-based keys for data isolation
 
 ## System Architecture
 
@@ -37,14 +42,26 @@ The frontend follows a mobile-first design with bottom navigation (5 tabs: ä¸»é 
 - **Icons**: `/icons/icon-192.png` and `/icons/icon-512.png` for Android installation
 - **Offline Support**: Full offline mode with localStorage caching and sync queue
 
+### Authentication Architecture
+- **Provider**: Replit Auth (OpenID Connect) with Google SSO support
+- **Session**: Express session with PostgreSQL store (connect-pg-simple)
+- **User Data**: Stored in `users` table with OIDC claims (sub, email, name, picture)
+- **Protected Routes**: All API routes require authentication via `isAuthenticated` middleware
+- **Key Files**:
+  - `server/replit_integrations/auth/index.ts`: Auth routes and middleware
+  - `client/src/hooks/use-auth.ts`: Frontend auth hook
+  - `client/src/pages/login.tsx`: Login page
+  - `shared/models/auth.ts`: User type definitions
+
 ### Offline Mode Architecture
-- **Local Storage**: Tasks and progress cached in localStorage (`natalie_tasks`, `natalie_progress`)
-- **Sync Queue**: Pending operations stored in `natalie_sync_queue` for later sync
-- **ID Mapping**: Local-to-server ID mapping (`natalie_id_map`) ensures data integrity after sync
+- **Local Storage**: Tasks and progress cached with userId-based keys (`natalie_tasks_{userId}`, `natalie_progress_{userId}`)
+- **Sync Queue**: Pending operations stored in `natalie_sync_queue_{userId}` for later sync
+- **ID Mapping**: Local-to-server ID mapping (`natalie_id_map_{userId}`) ensures data integrity after sync
+- **User Tracking**: Current user ID stored in `natalie_current_user` for offline access
 - **Offline Indicator**: UI component shows current network status and pending sync count
 - **Auto Sync**: Automatically syncs pending operations when connection is restored
 - **Key Files**:
-  - `client/src/lib/offline-storage.ts`: localStorage utilities
+  - `client/src/lib/offline-storage.ts`: localStorage utilities with multi-user support
   - `client/src/lib/sync-manager.ts`: Sync queue processing
   - `client/src/hooks/use-online-status.ts`: Network status detection
   - `client/src/components/offline-indicator.tsx`: Status UI
@@ -52,11 +69,12 @@ The frontend follows a mobile-first design with bottom navigation (5 tabs: ä¸»é 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
 - **API Style**: REST API with JSON responses
-- **Storage**: In-memory storage with interface abstraction (`IStorage`) for easy database migration
+- **Storage**: PostgreSQL with Drizzle ORM, user-specific data isolation
+- **Authentication**: Replit Auth (OpenID Connect) with session management
 - **Schema Validation**: Zod for runtime type checking and validation
 - **Build**: ESBuild for production bundling
 
-The server uses a clean separation between routes, storage, and static file serving. The storage layer implements an interface pattern allowing seamless transition from in-memory to PostgreSQL.
+The server uses a clean separation between routes, storage, and static file serving. All data is scoped to the authenticated user via `userId` in the database schema.
 
 ### Data Models
 - **Tasks**: Schedulable items with optional duration, recurrence, and associated sticker rewards
