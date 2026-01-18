@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mascot } from "@/components/mascot";
 import { CelebrationModal } from "@/components/celebration-modal";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { queryClient, completeTimerOfflineAware } from "@/lib/queryClient";
 import { stickers } from "@shared/schema";
 
 const presetTimes = [
@@ -26,7 +26,7 @@ export default function Timer() {
 
   const completeMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest("POST", "/api/timer/complete", { durationMinutes: selectedMinutes });
+      return completeTimerOfflineAware(selectedMinutes);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
@@ -36,22 +36,22 @@ export default function Timer() {
 
   const playAlarm = useCallback(() => {
     if (!soundEnabled) return;
-    
+
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
+
     const playTone = (frequency: number, startTime: number, duration: number) => {
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.frequency.value = frequency;
       oscillator.type = "sine";
-      
+
       gainNode.gain.setValueAtTime(0.3, startTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-      
+
       oscillator.start(startTime);
       oscillator.stop(startTime + duration);
     };

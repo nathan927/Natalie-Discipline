@@ -1,61 +1,31 @@
-import { useEffect, useCallback } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@shared/models/auth";
-import { setCurrentUser, clearCurrentUser, clearSyncQueue, clearIdMap } from "@/lib/offline-storage";
+import { useEffect } from "react";
+import { setCurrentUser, getCurrentUser } from "@/lib/offline-storage";
 
-async function fetchUser(): Promise<User | null> {
-  try {
-    const response = await fetch("/api/auth/user", {
-      credentials: "include",
-    });
-
-    if (response.status === 401) {
-      return null;
-    }
-
-    if (!response.ok) {
-      console.error("Failed to fetch user:", response.status, response.statusText);
-      return null;
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return null;
-  }
+// 本地用戶類型（簡化版）
+export interface LocalUser {
+  id: string;
+  firstName: string;
 }
 
+const LOCAL_USER_ID = "local_user";
+
 export function useAuth() {
-  const queryClient = useQueryClient();
-  const { data: user, isLoading, refetch } = useQuery<User | null>({
-    queryKey: ["/api/auth/user"],
-    queryFn: fetchUser,
-    retry: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-
+  // 初始化時設置本地用戶
   useEffect(() => {
-    if (user?.id) {
-      setCurrentUser(user.id);
+    if (!getCurrentUser()) {
+      setCurrentUser(LOCAL_USER_ID);
     }
-  }, [user]);
+  }, []);
 
-  const logout = useCallback(async () => {
-    clearCurrentUser();
-    clearSyncQueue();
-    clearIdMap();
-    
-    queryClient.setQueryData(["/api/auth/user"], null);
-    queryClient.clear();
-    
-    window.location.href = "/api/logout";
-  }, [queryClient]);
+  // 始終返回已認證的本地用戶
+  const user: LocalUser = {
+    id: LOCAL_USER_ID,
+    firstName: "小朋友",
+  };
 
   return {
     user,
-    isLoading,
-    isAuthenticated: !!user,
-    logout,
-    refetch,
+    isLoading: false,
+    isAuthenticated: true,
   };
 }

@@ -1,54 +1,50 @@
-import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { 
-  User, 
-  Trophy, 
-  Flame, 
-  Star, 
-  Clock, 
+import {
+  User,
+  Trophy,
+  Flame,
+  Star,
+  Clock,
   CheckCircle2,
   Moon,
   Sun,
   ChevronRight,
   Bell,
-  Palette,
-  LogOut
+  Palette
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Mascot } from "@/components/mascot";
 import { useTheme } from "@/components/theme-provider";
-import { useAuth } from "@/hooks/use-auth";
-import type { UserProgress } from "@shared/schema";
+import { getLocalProgress } from "@/lib/offline-storage";
 
 const statCards = [
-  { 
+  {
     key: "totalPoints",
-    label: "總積分", 
-    icon: Trophy, 
+    label: "總積分",
+    icon: Trophy,
     color: "text-yellow-500",
     bg: "bg-yellow-100 dark:bg-yellow-900/30"
   },
-  { 
+  {
     key: "currentStreak",
-    label: "連續日數", 
-    icon: Flame, 
+    label: "連續日數",
+    icon: Flame,
     color: "text-orange-500",
     bg: "bg-orange-100 dark:bg-orange-900/30"
   },
-  { 
+  {
     key: "completedTasks",
-    label: "已完成任務", 
-    icon: CheckCircle2, 
+    label: "已完成任務",
+    icon: CheckCircle2,
     color: "text-green-500",
     bg: "bg-green-100 dark:bg-green-900/30"
   },
-  { 
+  {
     key: "timerSessionsCompleted",
-    label: "專注時段", 
-    icon: Clock, 
+    label: "專注時段",
+    icon: Clock,
     color: "text-blue-500",
     bg: "bg-blue-100 dark:bg-blue-900/30"
   },
@@ -56,13 +52,11 @@ const statCards = [
 
 export default function Profile() {
   const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
 
-  const { data: progress } = useQuery<UserProgress>({
-    queryKey: ["/api/progress"],
-  });
+  // 直接從本地存儲獲取進度
+  const progress = getLocalProgress();
 
-  const displayName = user?.firstName || user?.email?.split("@")[0] || "小朋友";
+  const displayName = "小朋友";
   const initials = displayName.charAt(0).toUpperCase();
 
   const getProgressValue = (key: string): number => {
@@ -101,9 +95,6 @@ export default function Profile() {
           <Card className="p-6 mb-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
             <div className="flex items-center gap-4">
               <Avatar className="w-20 h-20 border-4 border-primary/20">
-                {user?.profileImageUrl && (
-                  <AvatarImage src={user.profileImageUrl} alt={displayName} />
-                )}
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
                   {initials}
                 </AvatarFallback>
@@ -112,11 +103,6 @@ export default function Profile() {
                 <h2 className="text-xl font-bold text-foreground" data-testid="text-username">
                   {displayName}
                 </h2>
-                {user?.email && (
-                  <p className="text-sm text-muted-foreground" data-testid="text-email">
-                    {user.email}
-                  </p>
-                )}
                 <div className="flex items-center gap-2 mt-1">
                   <div className="px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium">
                     Level {levelInfo.level}
@@ -240,20 +226,14 @@ export default function Profile() {
         </motion.div>
 
         <motion.div
-          className="mt-6"
+          className="mt-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => logout()}
-            data-testid="button-logout"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            登出
-          </Button>
+          <p className="text-xs text-muted-foreground">
+            你嘅進度會自動保存喺呢部裝置
+          </p>
         </motion.div>
       </div>
     </div>

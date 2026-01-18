@@ -57,7 +57,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskModalProps) {
   const availableStickers = getRandomStickers();
   const defaultStickerId = availableStickers[0]?.id || "mg-1";
-  
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -201,8 +201,17 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium">時長（分鐘）</FormLabel>
-                      <div className="flex gap-2">
-                        {presetDurations.map((d) => (
+                      <div className="flex gap-2 flex-wrap">
+                        <Button
+                          type="button"
+                          variant={field.value === undefined ? "default" : "secondary"}
+                          className="h-12 rounded-xl font-semibold px-4"
+                          onClick={() => field.onChange(undefined)}
+                          data-testid="button-duration-allday"
+                        >
+                          全日事件
+                        </Button>
+                        {field.value !== undefined && presetDurations.map((d) => (
                           <Button
                             key={d}
                             type="button"
@@ -234,11 +243,10 @@ export function AddTaskModal({ isOpen, onClose, onAdd, selectedDate }: AddTaskMo
                             key={sticker.id}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => field.onChange(sticker.id)}
-                            className={`p-2 rounded-xl cursor-pointer transition-all ${
-                              field.value === sticker.id
+                            className={`p-2 rounded-xl cursor-pointer transition-all ${field.value === sticker.id
                                 ? "ring-2 ring-primary bg-primary/10"
                                 : "hover:bg-muted"
-                            }`}
+                              }`}
                             data-testid={`sticker-option-${sticker.id}`}
                           >
                             <StickerIcon sticker={sticker} unlocked={true} size="md" />
